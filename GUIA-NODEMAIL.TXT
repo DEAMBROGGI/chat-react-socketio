@@ -1,0 +1,36 @@
+nodemailer, es un paquete que permite la creacion de un server para envio de correo electronicos
+en nuestro caso lo vamos a utilizar para validar los email de los usuarios en nuestra app
+- Vamos a agregar a nuestro modelo de db los campos necesarios
+-Una vez que el usuario envia la solicitu de nuevo usuario y esta pasa el validador y llega al controlador.
+
+EL CONTROLADOR
+-Ete se encargar de:
+    -Verificar si el usuario existe.
+    -Si este no existe creara uno acorde al nodelo establecido en db
+
+    En esta oportunidad  a la funcion que ya tenemos de NUEVOS USUARIOS, le agregaremos un generador random de 
+    strings, una clave alfanumerica que se adjuntara como parametro al link de validacion de email 
+    Un boleano que establecera si la cuenta fue verificada
+    y la llamada a la funcion encargada de enviar el email
+    (A la respuesta que ya tenemos sobre la creacion del usuario, la cambiamos por una que indique el envio del mail)
+
+FUNCION SEND EMAIL
+requiere los mismo parametros necesarios para configurar un correo electronico en una PC
+
+LINK EN EMAIL
+Una vez que el usuario da click en el vinculo, esta es recepcionada por la ruta establecido ennuestro router
+- Recuerder que dentro del link es contenido el strin unico
+
+
+FUNCION VERIFYEMAIL
+Es llamada por el router cuando el usuario da click al link en el mail
+Es la encargada de extraer el string unico
+Buscar el usuario relacionado en la base de datos
+Cambiar la condicion del campo emailVerified de false a true
+y de redireccionar al usuario a la ruta que establezcan  
+
+FUNCION ACCEDER A CUENTA 
+Luego de verificar si el usuario existe comprobamos que el correo se verifico
+En caso de que no fuese verificamos indicamos al usuario que lo verifique
+
+NOTA = 
