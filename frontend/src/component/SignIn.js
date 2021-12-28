@@ -71,7 +71,7 @@ export default function SignIn() {
 
 const responseGoogle = async  res => {
    //TOMAMOS LA RESPUESTA GOOGLE
-  let logGoogleUser = {
+   let logGoogleUser = {
       email: res.profileObj.email,
       password: res.profileObj.googleId,
       google:true

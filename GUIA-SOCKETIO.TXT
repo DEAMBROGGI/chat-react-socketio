@@ -1,0 +1,49 @@
+Socket io nos permite establecer una comunicacion Real Time entre el backend y el frontend
+
+1- Agregaremos nuestro MODELO de db un campo adicional "isConected" de caracter boleano para establecer si el usuario esta online
+2-En los CONTROLLERS agregamos userConectedController
+    Este contiene la funcion "getUserConected" la cual se encarga de buscar en la base datos todos los usuarios conectados.
+    Agregamos a nustras funciones accederCuenta y cerrarSesion el atributo isConected true o false segun corresponda
+
+3-En SERVER.js 
+    requieromos a "getUserConected"
+    instalamos el paquete npm i socket.io y lo requerimos
+    creamos la constante io y le pasamos como atributo server y cors, 
+
+    Desde aqui comenzamos a establecer las conecciones con nuestros socket
+
+    En esta practica utilizaremos los metodos mas comunes y necesarios para estalecer la comunicacion
+    on= necesario para escuchar los eventos.
+    emit= necesario para emitir los eventos
+
+    A- vamos a crear la comunicacion que establece la comunicacion primaria entre el back y el frontend
+    esta es de tipo on y escucha el evento "connnect" y recibe como parametro socket
+
+    En esta oportunidad el evento connect sera emitido desde nuestro componente App en nuestro frontend
+        En app importaremos el paquete socket-io-client  intalado mediante npm i socket.io.client
+        Utilizaremos el metodo io.connect(ENDPOINT) y como ENDPOINT el url de nuestro server
+        Ya realizada la conexion realizaremos un dispatch de nuestro socket al reducer ya sea en redux o context
+        para tenerlo de manera global para poder requerirlo por los componentes.
+        (en el socket generado y conectado se encuentra un id el cual es nuestro identificador de conexion entre el server y nuestro ip)
+    
+    Ya establecida nuestra conexion primaria volvemos al server y dentro de la conexion primaria creamos un escucdaor de eventos
+    socket.on("user list", calback), pasandole como prmer argumento el evento a escucha y como segundo argumento una funcion
+    callback la cual llamara a la funcion "getUserConected" para obtener los usuarios conectados
+
+    el emit("user list") en esta oportunidad los realizamos desde el componente Home, para actualizar el listado de usuario 
+    tango cuando realizan signIn o SignOut
+
+    Una vez que desde el server obtiene el callback de la funcion "getUserConected", realiza dos emit
+    de caracteristicas similares
+    1- socket.emit('usersConected',{response}) el cual su destinatarios es tu popio ip y le envia como parametro la respuesta de la funcion "getUserConected"
+    2- socket.broadcast.emit('usersConected', {response}) este esta destinado al resto de ip conectados al server mediante socket y tambien les envia 
+    la respuesta de la funcion "getUserConected"
+    El Termino BROADCAST es muy importante ya que este se encargar de emitir a los otros sockets conectados, sin esto solo veras actualizada tu vista
+
+    Este ultimo emit sera recibido por el componente UsersConected mediante socket.on('usersConected', ({response}) => { 
+    el cual realizara el renderizado de la lista mediante la respuesta enviada como parametro
+
+    Los sockets.id cambian con cada sesion.
+    en caso que quieran vean tambien el metodo socket.disconect()en 
+
+    https://socket.io/docs/v3/client-api/

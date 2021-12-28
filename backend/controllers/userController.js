@@ -62,8 +62,8 @@ const userControllers = {
 
     nuevoUsuario: async(req, res) => {
         
-        let { firstName, lastName, email, password, google } = req.body.newUser   
-        
+        let { firstName, lastName, email, password, google, isConected } = req.body.newUser   
+        console.log(google)
         try {
 
             const usuarioExiste = await User.findOne({email}) //BUSCAR SI EL USUARIO YA EXISTE EN DB
@@ -74,9 +74,10 @@ const userControllers = {
                     usuarioExiste.password=contraseñaHasheada;
                     usuarioExiste.emailVerified = true //ESTABLEZCO LA NO VERIFICACION DEL EMAIL
                     usuarioExiste.google = true
+                    usuarioExiste.isConected=false
                     usuarioExiste.save()//GUARDO EL USUARIO EN DB
-                    res.json({success: true, response:"Actualizamos tu signIn para que lo puedas realizar con Google"})
-                
+                    res.json({success: true, message:"Actualizamos tu signIn para que lo puedas realizar con Google"})
+                    console.log(usuario.google)
                 }else{
                 res.json({success: false, response:"El nombre de usuario ya esta en uso"})}// EN ESTE PUNTO SI EXITE RESPONDE FALSE
                 
@@ -98,13 +99,15 @@ const userControllers = {
                     uniqueString, //RANDON STRING
                     emailVerified, //BOLEANO DE VERIFICACION
                     google,         //BOLEANO DE CUENTA GOOGLE
+                    isConected
                 })
                 
                 const token = await jwt.sign({...nuevoUsuario}, process.env.SECRET_KEY) // CREA UN TOKEN 
                  //SE LO ASIGNA AL USUARIO NUEVO
                 if(google){ //SI LA PETICION PROVIENE DE CUENTA GOOGLE
-                    emailVerified = true; //DOY MAIL POR VERIFICADO
-                    nuevoUsuario.google = true //MARCO COMO CUENTA GOOGLE
+                    nuevoUsuario.emailVerified = true; //DOY MAIL POR VERIFICADO
+                    nuevoUsuario.google = true
+                    nuevoUsuario.isConected=false //MARCO COMO CUENTA GOOGLE
                     await nuevoUsuario.save()
                     res.json({success: true, response: {token,nuevoUsuario}, //RESPONDE CON EL TOKEN Y EL NUEVO USUARIO
                         message: "Felicitaciones se ha creado tu usuario con Google" }) // AGREGAMOS MENSAJE DE VERIFICACION
@@ -112,6 +115,7 @@ const userControllers = {
                     }else{//SI NO PROVIENE DE CUENTA GOOGLE
                     emailVerified=false //ESTABLEZCO VERIFICACION COMO FALSE
                     nuevoUsuario.google=false
+                    nuevoUsuario.isConected=false
                     await nuevoUsuario.save()
                 await sendEmail(email, uniqueString) //LLAMA A LA FUNCION ENCARGADA DEL ENVIO DEL CORREO ELECTRONICO
                    
@@ -127,8 +131,9 @@ const userControllers = {
         
     },
     accederACuenta: async(req, res)=>{
-        const { email, password, google} = req.body.logedUser
-      
+        
+        const { email, password, google, } = req.body.logedUser
+        
         try {
             const usuarioExiste = await User.findOne({email})
             
@@ -139,13 +144,19 @@ const userControllers = {
             }else{
                 if(usuarioExiste.emailVerified){ //SEGUNDO VERIFICA QUE EL MAIL FUE VERIFICADO
                 let contraseñaCoincide = bcryptjs.compareSync(password, usuarioExiste.password)
+               
                 if (contraseñaCoincide) { //TERERO VERIFICA CONTRASEÑA
                     const token = jwt.sign({...usuarioExiste}, process.env.SECRET_KEY)
                     userData={
                         firstName:usuarioExiste.firstName,
                         lastName:usuarioExiste.lastName,
-                        email:usuarioExiste.email
+                        email:usuarioExiste.email,
+                       
+
                     }
+                    usuarioExiste.isConected = true // Pasamos isConected = true
+                    await usuarioExiste.save()
+                    
                     res.json({success:true, response:{token, userData} ,error:null})
                    
                     
@@ -166,9 +177,15 @@ const userControllers = {
             console.log(error);
             res.json({success: false, response: null, error: error})
         }
-    }
+    },
 
-    
+    cerraSesion: async(req, res) => { 
+        const email= req.body.closeuser
+        const user = await User.findOne({email})
+        user.isConected=false // Pasamos isConected = false
+        await user.save()
+        res.json(console.log('sesion cerrada ' +email)) 
+    }
 
 }
 

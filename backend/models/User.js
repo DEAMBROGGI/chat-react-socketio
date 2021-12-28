@@ -6,8 +6,9 @@ const userSchema = new mongoose.Schema({
     email:{type: String, required:true},
     password: {type:String, required:true},
     uniqueString:{type:String, required:true},
-    emailVerified:{type:Boolean, required:true},
-    google:{type:Boolean, required:true}
+    emailVerified:{type:Boolean, required:true}, //se agrega este campo para controlar si se verifico el email
+    google:{type:Boolean, required:true},
+    isConected:{type:Boolean, required:true} //Se agrega este campo para verificar si el usuario esta en linea
 })
 
 const User = mongoose.model('user', userSchema)

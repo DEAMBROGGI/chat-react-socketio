@@ -5,15 +5,19 @@ export const initialState = {
              message: '',
              success:false},
     Auth:false,
+    socket:"",
+    userList:[]
     
 }
 
 export const actionTypes = {
+    SOCKET:"SOCKET",
     ADD_NEWUSER:"ADD_NEWUSER",
     ADD_LOGEDUSER:"ADD_LOGEDUSER",
     SNACKBAR:"SNACKBAR",
     AUTH:"AUTH",
-    USER_CONECTED:"USER_CONECTED"
+    USER_CONECTED:"USER_CONECTED",
+    USER_LIST:"USER_LIST"
 }
 
 const reducer =(state, action ) =>{
@@ -21,6 +25,16 @@ const reducer =(state, action ) =>{
     console.log(action);
 
 switch(action.type){
+    case "USER_LIST":
+        return{
+            ...state,
+           userList: action.userList
+        }
+    case "SOCKET":
+        return{
+            ...state,
+           socket: action.socket
+        }
     
     case "ADD_NEWUSER":
         return{

@@ -20,6 +20,13 @@ import axios from 'axios'
             }
         }
     ;
+
+   export const cerraSesion = async(closeuser)=>{
+       const user = axios.post('http://localhost:4000/api/auth/signOut',{closeuser})
+                    localStorage.removeItem('token')
+                    localStorage.removeItem('userConected')
+
+   } 
    export const  iniciarSesion = async(logedUser) => {
    
             try {
@@ -27,7 +34,7 @@ import axios from 'axios'
                 {logedUser})
                 if(user.data.success && !user.data.error){
                     localStorage.setItem('token',user.data.response.token)
-                    localStorage.setItem('userConected',JSON.stringify(user.data.response.userData))
+                    localStorage.setItem('userConected', JSON.stringify(user.data.response.userData))
                     return {success:true, user}
                 }else{ return ({sucess:user.data.success, response:user})}
                     /*if(logedUser.google){

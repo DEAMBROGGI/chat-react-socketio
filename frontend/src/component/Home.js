@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,6 +9,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import {actionTypes} from '../core/reducer';
 import {useStateValue} from '../core/StateProvider';
+import UsersConected from './Chat/UsersConected';
+import {cerraSesion} from '../core/actions/userActions'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,28 +22,40 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  buttoms:{
+    display:"contents"
+  }
 }));
 
-export default  function MenuAppBar() {
+export default   function MenuAppBar() {
   const classes = useStyles();
   
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [{Auth,},dispatch] = useStateValue();
+  const [{Auth,socket,userList},dispatch] = useStateValue();
+  const[userConected, setUserConected]=React.useState(JSON.parse(localStorage.getItem('userConected')))
+  
 
-  const dataUserConected =  localStorage.getItem('userConected')
-  const userConected = JSON.parse(dataUserConected)
-  console.log(userConected)
-
-  const SignOut =()=>{
-      localStorage.removeItem('token')
-      localStorage.removeItem('userConected')
-      dispatch({
-        type:actionTypes.AUTH,
-        Auth:false
-        })    
+  const SignOut = async ()=>{
+    
+    await cerraSesion(userConected.email)
+    
+    dispatch({
+      type:actionTypes.AUTH, 
+      Auth:false
+      })
+  
+      socket.emit('user list', { userConected })   // LA LLAMAMOS CON EL SOCKE ALMACENADO GLOBALMENTE PARA ACTUALIZAR LASTA CUANDO UN USUARIO REALIZA SIGNOUT          
         
   }
+ 
+  useEffect(() => {
+    
+    socket.emit('user list', { userConected }) //OBTENEMOS EL LISTADO DE USUARIOS CONECTADOS
+                                                //EL SOCKET LO TREMOS DESDE NUESTRO STATE DE REDUX O CONTEXT
+  }, []) 
+  
+  
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,15 +66,18 @@ export default  function MenuAppBar() {
   };
 
   return (
+    <div>
     <div className={classes.root}>
       
       <AppBar >
         <Toolbar >
         <Typography variant="h6" className={classes.title}>
-            Hello {/*userConected.firstName*/}
+            Hello {userConected.firstName}
         </Typography>
-            <div>
-                
+            <div className={classes.buttoms}>
+              
+               <UsersConected userConected={userConected}/> 
+           
               <IconButton
                
                 rigth='0px'
@@ -95,6 +112,10 @@ export default  function MenuAppBar() {
           
         </Toolbar>
       </AppBar>
+    
+      
     </div>
+    
+     </div>
   );
 }

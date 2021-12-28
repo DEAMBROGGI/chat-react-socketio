@@ -82,6 +82,7 @@ const responseGoogle = async (res) => {
   
    await registrarUsuario( googleUser)
   .then((response) => {
+ console.log(response)
  
       if(response.success){
       dispatch({
@@ -98,7 +99,7 @@ const responseGoogle = async (res) => {
           type:actionTypes.SNACKBAR,
           snackbar:{
             view:true,
-            message:response.response.response,
+            message:response.response.message,
             success: response.response.success},   
           });
           ;
