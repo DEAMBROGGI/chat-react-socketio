@@ -6,7 +6,7 @@ import axios from 'axios'
 
             try {
                 // eslint-disable-next-line
-                const user = await axios.post('http://localhost:4000/api/auth/signUp',
+                const user = await axios.post('http://localhost:5000/api/auth/signUp',
                 {newUser})
                 if(user.data.success && !user.data.error){
                     localStorage.setItem('token',user.data.response.token)
@@ -22,7 +22,7 @@ import axios from 'axios'
     ;
 
    export const cerraSesion = async(closeuser)=>{
-       const user = axios.post('http://localhost:4000/api/auth/signOut',{closeuser})
+       const user = axios.post('http://localhost:5000/api/auth/signOut',{closeuser})
                     localStorage.removeItem('token')
                     localStorage.removeItem('userConected')
 
@@ -30,7 +30,7 @@ import axios from 'axios'
    export const  iniciarSesion = async(logedUser) => {
    
             try {
-                const user = await axios.post('http://localhost:4000/api/auth/signIn',
+                const user = await axios.post('http://localhost:5000/api/auth/signIn',
                 {logedUser})
                 if(user.data.success && !user.data.error){
                     localStorage.setItem('token',user.data.response.token)

@@ -13,7 +13,7 @@ function App() {
   const [{Auth},dispatch] = useStateValue();
   
   useEffect(() => {
-const socket = io.connect("http://localhost:4000");  //REALIZA LA LLAMAD A CONNECT PARA INICIALIZAR EL SOCKET
+const socket = io.connect("http://localhost:5000");  //REALIZA LA LLAMAD A CONNECT PARA INICIALIZAR EL SOCKET
     dispatch({
       type:actionTypes.SOCKET, //COLOCAMOS EL SOQUET DE MANERA GLOBAL
       socket:socket

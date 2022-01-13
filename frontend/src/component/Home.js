@@ -10,6 +10,7 @@ import Menu from '@material-ui/core/Menu';
 import {actionTypes} from '../core/reducer';
 import {useStateValue} from '../core/StateProvider';
 import UsersConected from './Chat/UsersConected';
+import Files from './Files/Files';
 import {cerraSesion} from '../core/actions/userActions'
 
 const useStyles = makeStyles((theme) => ({
@@ -75,8 +76,9 @@ export default   function MenuAppBar() {
             Hello {userConected.firstName}
         </Typography>
             <div className={classes.buttoms}>
-              
+               <Files userConected={userConected}/>
                <UsersConected userConected={userConected}/> 
+               
            
               <IconButton
                
