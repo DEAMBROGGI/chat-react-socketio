@@ -1,0 +1,9 @@
+
+BACKEND
+Agregamos a nuestro modelo files
+En nuestra ruta requerimos el metodo fileupload de express y lo usamos en app
+Creamos nuestro controlador de archivos
+Establecemos la rutas
+
+FRONTEND
+Creamos las acciones que ven a vicular nuestro FRONTEND con el BACKEND
