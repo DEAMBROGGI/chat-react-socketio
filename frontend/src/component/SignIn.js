@@ -199,6 +199,7 @@ const handleInputChange = (event) => {
             label="Remember me"
           />
           <Button
+            name="btnSignin"
             type="submit"
             fullWidth
             variant="contained"

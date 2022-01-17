@@ -1,0 +1,21 @@
+
+NPM
+npm install selenium-webdriver para vincular nuestra app con los drivers del servidor
+npm install -- global mocha  (de manera global)
+npm install mocha (el el proyecto)
+npm install assert
+npm install  chromedriver (instalan los driver de su navegador para poder crear la instancia de inicio desde el proyecto)
+npm install -g chromedriver (de manera gobla para ser llamados por el script)
+
+NOTA EN CASO DE QUE SU NAVEGADOR NO POSEA LOS WEB DRIVER ACTUALIZADOS LOS BUSCAN EN LA PAGINA DEBAJO
+PRIMERO REALIZEN EL TEST SIN MODIFICAR LOS DRIVERS
+https://www.selenium.dev/documentation/webdriver/getting_started/install_drivers/ (en mi caso chrome 97.0.4692.71)
+
+Vamos a utilizar dos test en conjunto uno es MOCHA y el otro es SELENIUM
+https://www.selenium.dev/
+https://mochajs.org/
+
+- creamos el script en package.json
+- creamos nuestro archivo test.js (es muy importante este nombre ya que MOCHA lo busca de este modo)
+
+#root > div:nth-child(1) > div > header > div > h6
