@@ -1,20 +1,24 @@
 import axios from 'axios'
-
+import {actionTypes} from '../reducer';
  
 
-  export const registrarUsuario = async (newUser) =>{
+  export const registrarUsuario = async (newUser, dispatch, navigate) =>{
 
             try {
                 // eslint-disable-next-line
                 const user = await axios.post('http://localhost:5000/api/auth/signUp',
                 {newUser})
-                if(user.data.success && !user.data.error){
-                    localStorage.setItem('token',user.data.response.token)
-                    return {success:true, response:user.data}
-                }else{
-
-                    return {success:false, response:user.data.response}
-                }
+                
+                  dispatch({
+                    type:actionTypes.SNACKBAR,
+                    snackbar:{
+                      view:true,
+                      message:user.data.message,
+                      success: user.data.success
+                    }  
+                    }); 
+                    
+                       
             }catch(error){
                 console.log(error)
             }
@@ -22,21 +26,41 @@ import axios from 'axios'
     ;
 
    export const cerraSesion = async(closeuser)=>{
+   
        const user = axios.post('http://localhost:5000/api/auth/signOut',{closeuser})
                     localStorage.removeItem('token')
-                    localStorage.removeItem('userConected')
+                   
 
    } 
-   export const  iniciarSesion = async(logedUser) => {
-   
+   export const  iniciarSesion = async(logedUser, dispatch, navigate) => {
+
             try {
                 const user = await axios.post('http://localhost:5000/api/auth/signIn',
                 {logedUser})
-                if(user.data.success && !user.data.error){
+console.log(user)
+                
+                dispatch({
+                    type:actionTypes.SNACKBAR,
+                    snackbar:{
+                      view:true,
+                      message:user.data.message,
+                      success: user.data.success
+                    }  
+                    });
+                    if(user.data.success){
+                    dispatch({
+                        type: actionTypes.ADD_LOGEDUSER,
+                        logedUser:user.data.response
+                    })    
+                    
+                    localStorage.setItem('token',user.data.response.token)
+                    navigate('/home')
+                }
+                /*if(user.data.success && !user.data.error){
                     localStorage.setItem('token',user.data.response.token)
                     localStorage.setItem('userConected', JSON.stringify(user.data.response.userData))
                     return {success:true, user}
-                }else{ return ({sucess:user.data.success, response:user})}
+                }else{ return ({sucess:user.data.success, response:user})}*/
                     /*if(logedUser.google){
                         return {success:false, response:"You have to sign up before you log in"}
 

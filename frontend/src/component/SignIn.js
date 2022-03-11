@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {Link as RouterLink } from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {useStateValue} from '../core/StateProvider';
 import {actionTypes} from '../core/reducer';
 import {iniciarSesion} from '../core/actions/userActions'
@@ -62,10 +62,11 @@ export default function SignIn() {
   const classes = useStyles();
   const [{logedUser},dispatch] = useStateValue();
   const [userData, setUserData] = useState({
-    
     email:'',
-    password:''
+    password:'',
+    from:"signin"
 })
+let navigate = useNavigate()
 
 
 
@@ -74,43 +75,12 @@ const responseGoogle = async  res => {
    let logGoogleUser = {
       email: res.profileObj.email,
       password: res.profileObj.googleId,
-      google:true
+      from:"google"
 }
 
-  await iniciarSesion(logGoogleUser)
+  await iniciarSesion(logGoogleUser, dispatch, navigate)
 
-  .then((response ) => {
-
-       if(response.success) {
-       dispatch({
-        type:actionTypes.SNACKBAR,
-        snackbar:{
-          view:true,
-          message:"Welcome back "+response.user.data.response.userData.firstName,
-          success: true},
-      });
-      dispatch({
-        type:actionTypes.AUTH,
-        Auth:true
-        });
-                      
-    }else{
-      dispatch({
-      type:actionTypes.SNACKBAR,
-      snackbar:{
-        view:true,
-        message:response.response.data.error,
-        success: false},
-    })      
-  }
-
-  })
-  .catch((error) => {
-      console.log(error)
-     
-  })
 }
-
 const handleInputChange = (event) => {
     setUserData({
         ...userData,
@@ -119,44 +89,8 @@ const handleInputChange = (event) => {
 }
   const handleSubmit= async (event)=>{
     event.preventDefault()
-   await iniciarSesion(userData)
-   .then(  response =>{
-  
-     if(!response.user){
-   
-  dispatch({
-        type:actionTypes.SNACKBAR,
-        snackbar:{
-          view:true,
-          message:response.response.data.error,
-          success: false},
-      })
-
-     }else{
-      dispatch({
-        type:actionTypes.SNACKBAR,
-        snackbar:{
-          view:true,
-          message:"Welcome back "+ response.user.data.response.userData.firstName,
-          success: true},
-      });
-      dispatch({
-        type:actionTypes.AUTH,
-        Auth:true
-        })     
-     }
-    
-    
-   }).catch((error) => {
-    console.log(error)
-    
-       
-})
-
-        await dispatch({
-            type: actionTypes.ADD_LOGEDUSER,
-            logedUser:userData
-        })
+   await iniciarSesion(userData, dispatch, navigate)
+ 
   }
 
   return (

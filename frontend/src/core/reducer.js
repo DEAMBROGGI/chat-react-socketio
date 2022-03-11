@@ -1,6 +1,6 @@
 export const initialState = {
     newUser:false,
-    logedUser:[],
+    logedUser:null,
     snackbar:{view: false,
              message: '',
              success:false},

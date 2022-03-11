@@ -1,6 +1,6 @@
 import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
-import {useStateValue} from '../core/StateProvider';
+import { useStateValue } from '../core/StateProvider';
 //material ui
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -8,24 +8,17 @@ import { actionTypes } from '../core/reducer';
 import { makeStyles } from '@material-ui/core/styles';
 import { styled } from '@material-ui/core/styles';
 
-
-
-
-
 function Snack() {
-
-  const [{snackbar},dispatch] = useStateValue();
-
-  
+  const [{ snackbar }, dispatch] = useStateValue();
 
   const useStyles = makeStyles(theme => ({
     icon: {
       marginLeft: '15px'
     }
   }));
-  
-   const MySnackbar = styled(Snackbar)({
-    backgroundColor: snackbar.success ? 'green': 'red',
+
+  const MySnackbar = styled(Snackbar)({
+    backgroundColor: snackbar.success ? 'green' : 'red',
     color: '#fff',
     borderRadius: '4px',
     padding: '6px 16px',
@@ -38,12 +31,12 @@ function Snack() {
 
   const handleClose = () => {
     dispatch({
-      type:actionTypes.SNACKBAR,
-      snackbar:{
-          view: false,
-          message: '',
-        success:false}
-    
+      type: actionTypes.SNACKBAR,
+      snackbar: {
+        view: false,
+        message: '',
+        success: false
+      }
     });
   };
 
@@ -58,21 +51,25 @@ function Snack() {
           open={snackbar.view}
           onClose={handleClose}
           autoHideDuration={5000}
-       > 
-        <>
-          <p>
-            {snackbar.message}
-          </p>
-          <IconButton className={classes.icon} size="small" aria-label="close" color="inherit" onClick={handleClose}>
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </>
+        >
+          <>
+            {(typeof snackbar.message) === "string" ?
+              (<p>{snackbar.message}</p>) :
+              <ul>
+                {snackbar.message.map(message =>
+                  <li>{message.message}</li>
+                )}
+              </ul>
+            }
+            <IconButton className={classes.icon} size="small" aria-label="close" color="inherit" onClick={handleClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
         </MySnackbar>
       )}
-      
+
     </div>
   );
 }
-
 
 export default Snack

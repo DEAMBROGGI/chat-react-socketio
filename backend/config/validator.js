@@ -1,7 +1,6 @@
 const joi = require('joi')
 
 const validator = (req, res, next) => {
-console.log(req.body.newUser)
     const schema = joi.object({
         firstName: joi.string().max(20).min(3).trim().pattern(new RegExp('[a-zA-Z]')).required().messages({
             'string.min':'El NOMBRE debe contener mas de 3 caracteres'
@@ -15,14 +14,15 @@ console.log(req.body.newUser)
         password: joi.string().required().trim().min(8).max(30).messages({
             'string.min':'El password debe contener minimo 8 caracteres'
         }),
-        google: joi.boolean()
+        
+        from:joi.string()
     })
 
     const validation = schema.validate(req.body.newUser, {abortEarly:false})
        console.log(req.body.newUser)
     if (validation.error) {
         
-        return res.json({success: false, response:validation})
+        return res.json({success: false, message:validation.error.details})
     }
     
     next()

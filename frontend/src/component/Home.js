@@ -33,17 +33,17 @@ export default   function MenuAppBar() {
   
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const [{Auth,socket,userList},dispatch] = useStateValue();
+  const [{Auth,socket,userList, logedUser},dispatch] = useStateValue();
   const[userConected, setUserConected]=React.useState(JSON.parse(localStorage.getItem('userConected')))
   
 
   const SignOut = async ()=>{
     
-    await cerraSesion(userConected.email)
+    await cerraSesion(logedUser.userData.email)
     
     dispatch({
-      type:actionTypes.AUTH, 
-      Auth:false
+      type:actionTypes.ADD_LOGEDUSER, 
+      logedUser:null
       })
   
       socket.emit('user list', { userConected })   // LA LLAMAMOS CON EL SOCKE ALMACENADO GLOBALMENTE PARA ACTUALIZAR LASTA CUANDO UN USUARIO REALIZA SIGNOUT          
@@ -73,7 +73,7 @@ export default   function MenuAppBar() {
       <AppBar >
         <Toolbar >
         <Typography variant="h6" className={classes.title}>
-            Hello {userConected.firstName}
+           {/* Hello {userConected.firstName}*/}
         </Typography>
             <div className={classes.buttoms}>
                <Files userConected={userConected}/>
